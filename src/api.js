@@ -23,7 +23,7 @@ passport.use(
   new LocalStrategy(
     async function verify(username, password, cb) {
       console.log(`passport verify()`, {username, password});
-      // fake authentication here
+      // NOTE: fake authentication here, replace with your own auth logic
       const user = {
         username,
       };
