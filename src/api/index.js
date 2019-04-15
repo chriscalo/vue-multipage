@@ -95,7 +95,7 @@ app.route('/login')
         } else {
           return res.json({
             user: user,
-            redirectTo: req.session.redirectTo,
+            returnTo: req.session.returnTo,
           });
         }
       });

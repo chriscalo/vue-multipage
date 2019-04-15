@@ -39,7 +39,7 @@
           .then(response => response.data)
           .then(data => {
             console.log(data)
-            window.location = data.redirectTo || "/";
+            window.location = data.returnTo || "/";
           })
           .then(console.log)
           .catch(error => {
