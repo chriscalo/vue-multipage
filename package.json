@@ -27,8 +27,7 @@
     "passport-local": "^1.0.0",
     "prefetch": "^0.2.1",
     "ramda": "^0.26.1",
-    "vue": "^2.6.10",
-    "vuex": "^3.0.1"
+    "vue": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.6.0",
