@@ -1,4 +1,4 @@
-const { apiServer } = require('./src/api');
+const { apiServer } = require("./src/api");
 const pagesConfig = require("./src/entry/pages.config.js");
 
 module.exports = {

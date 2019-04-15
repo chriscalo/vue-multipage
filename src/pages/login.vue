@@ -1,29 +1,36 @@
 <template>
-  <form
-    @submit.prevent="submit"
-    action="/login"
-    method="POST"
-  >
-    <label style="display: block">
-      User name<br/>
-      <input type="text" name="username" v-model="username"/>
-    </label>
-    <label style="display: block">
-      Password<br/>
-      <input type="password" name="password" v-model="password"/>
-    </label>
-    <div v-if="error" style="background: red; padding: 8px; color: white;">
-      {{ error }}
-    </div>
-    <button type="submit">Log in</button>
-  </form>
+  <main>
+    <Navigation/>
+    <form
+      @submit.prevent="submit"
+      action="/login"
+      method="POST"
+    >
+      <label style="display: block">
+        User name<br/>
+        <input type="text" name="username" v-model="username"/>
+      </label>
+      <label style="display: block">
+        Password<br/>
+        <input type="password" name="password" v-model="password"/>
+      </label>
+      <div v-if="error" style="background: red; padding: 8px; color: white;">
+        {{ error }}
+      </div>
+      <button type="submit">Log in</button>
+    </form>
+  </main>
 </template>
 
 <script>
   import axios from "axios";
+  import Navigation from "@/components/Navigation.vue";
   
   
   export default {
+    components: {
+      Navigation,
+    },
     data: () => ({
       username: "",
       password: "",
@@ -38,7 +45,6 @@
           })
           .then(response => response.data)
           .then(data => {
-            console.log(data)
             window.location = data.returnTo || "/";
           })
           .then(console.log)
@@ -49,3 +55,7 @@
     },
   };
 </script>
+
+<style lang="scss">
+  @import "@/style.scss";
+</style>

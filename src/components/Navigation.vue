@@ -25,7 +25,7 @@
 <style lang="scss" scoped>
   nav {
     padding: 8px;
-    border: solid 2px black;
+    margin: 24px 0;
   }
   
   ul {

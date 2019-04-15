@@ -1,16 +1,16 @@
 const path = require("path");
 const fse = require("fs-extra");
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const { ensureLoggedIn } = require('connect-ensure-login');
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const { ensureLoggedIn } = require("connect-ensure-login");
 
-const loginRequired = ensureLoggedIn("/login");
 
 // Configure the local strategy for use by Passport.
 //
@@ -52,15 +52,15 @@ passport.deserializeUser((user, cb) => cb(null, user));
 
 // Create a new Express application.
 const app = express();
-app.enable('trust proxy');
+app.enable("trust proxy");
 
-app.use(morgan('tiny'));
+app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(require('express-session')({
-  secret: 'keyboard cat',
+app.use(session({
+  secret: "CHANGE ME!",
   resave: false,
   saveUninitialized: false,
 }));
@@ -70,53 +70,55 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Marking URLs that require login
+const loginRequired = ensureLoggedIn("/login");
 app.get("/foo", loginRequired);
 app.get("/bar", loginRequired);
+app.get("/baz", loginRequired);
 app.get("/profile", loginRequired);
 
-app.route('/login')
-  .post((req, res, next) => {
-    console.log(`POST /login`);
-    passport.authenticate('local', (err, user, info) => {
-      console.log(`passport.authenticate`, {err, user, info});
+app.get("/login", (req, res, next) => {
+  console.dir(req.session);
+  next();
+});
+
+app.post("/login", (req, res, next) => {
+  console.log(`POST /login`);
+  passport.authenticate("local", (err, user, info) => {
+    console.log(`passport.authenticate`, {err, user, info});
+    if (err) {
+      return next(err);
+    }
+    
+    if (!user) {
+      return res.status(403).json({
+        error: info.message,
+      });
+    }
+    
+    req.login(user, (err) => {
       if (err) {
         return next(err);
-      }
-      
-      if (!user) {
-        return res.status(403).json({
-          error: info.message,
+      } else {
+        return res.json({
+          user: user,
+          returnTo: req.session.returnTo,
         });
       }
-      
-      req.login(user, err => {
-        if (err) {
-          return next(err);
-        } else {
-          return res.json({
-            user: user,
-            returnTo: req.session.returnTo,
-          });
-        }
-      });
-    })(req, res, next);
-  });
-
-app.get(
-  "/whoami",
-  loginRequired,
-  (req, res) => {
-    res.json({
-      user: req.user,
     });
-  },
-);
+  })(req, res, next);
+});
 
-app.route('/logout')
-  .get((req, res) => {
-    req.logout();
-    res.redirect('/');
+app.get("/whoami", loginRequired, (req, res) => {
+  res.json({
+    user: req.user,
   });
+});
+
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/");
+});
 
 // TODO: set up a custom 404 response
 // NOTE: this needs to happen AFTER the dev server

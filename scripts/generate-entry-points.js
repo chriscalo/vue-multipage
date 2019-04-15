@@ -1,10 +1,10 @@
 const path = require("path");
-const glob = require('fast-glob');
+const glob = require("fast-glob");
 const fse = require("fs-extra");
 const R = require("ramda");
 const { stripIndent } = require("common-tags");
 
-const pathGlob = processRelativePath('../src/pages/**/*.vue');
+const pathGlob = processRelativePath("../src/pages/**/*.vue");
 const vuePagesPromise = glob(pathGlob);
 
 console.log(`Generating entry points`);

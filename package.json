@@ -6,7 +6,7 @@
     "dev": "run-p dev:pages dev:server:watch",
     "dev:pages": "nodemon --watch src/pages --watch scripts/generate-entry-points.js scripts/generate-entry-points.js",
     "dev:server": "vue-cli-service serve",
-    "dev:server:watch": "nodemon --watch vue.config.js --watch src/entry --watch src/api.js --watch package.json --exec 'yarn run dev:server'",
+    "dev:server:watch": "nodemon --watch vue.config.js --watch 'src/**/*.js' --watch package.json --exec 'yarn run dev:server'",
     "build": "vue-cli-service build",
     "build:watch": "vue-cli-service build --watch",
     "serve": "http-server dist/ -c-1",
