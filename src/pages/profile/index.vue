@@ -1,10 +1,10 @@
 <template>
-  <main>
+  <div id="app">
     <Navigation/>
     Profile
     <br/>
     username = {{user.username}}
-  </main>
+  </div>
 </template>
 
 <script>
@@ -32,5 +32,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/style.scss";
+  @import "@/styles.scss";
 </style>

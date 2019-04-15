@@ -1,9 +1,9 @@
 <template>
-  <main>
+  <div id="app">
     <Navigation/>
     <img alt="Vue logo" src="@/assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -21,5 +21,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/style.scss";
+  @import "@/styles.scss";
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div id="app">
     <Navigation/>
     <form
       @submit.prevent="submit"
@@ -19,7 +19,7 @@
       </div>
       <button type="submit">Log in</button>
     </form>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -45,7 +45,8 @@
           })
           .then(response => response.data)
           .then(data => {
-            window.location = data.returnTo || "/";
+            const urlParams = new URLSearchParams(window.location.search);
+            window.location = urlParams.get("returnTo") || "/";
           })
           .then(console.log)
           .catch(error => {
@@ -57,5 +58,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/style.scss";
+  @import "@/styles.scss";
 </style>

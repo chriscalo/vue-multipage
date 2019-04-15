@@ -9,7 +9,6 @@ const morgan = require("morgan");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { ensureLoggedIn } = require("connect-ensure-login");
 
 
 // Configure the local strategy for use by Passport.
@@ -71,7 +70,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Marking URLs that require login
-const loginRequired = ensureLoggedIn("/login");
+const loginRequired = (req, res, next) => {
+  if (!req.user) {
+    res.redirect(`/login?returnTo=${encodeURIComponent(req.url)}`)
+  } else {
+    next();
+  }
+};
 app.get("/foo", loginRequired);
 app.get("/bar", loginRequired);
 app.get("/baz", loginRequired);
@@ -119,14 +124,6 @@ app.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/");
 });
-
-// TODO: set up a custom 404 response
-// NOTE: this needs to happen AFTER the dev server
-// app.use((req, res, next) => {
-//   // FIXME: make 404.html a real vue page
-//   const notFoundHtml = path.resolve(__dirname, "../dist/404.html");
-//   res.status(404).sendFile(notFoundHtml);
-// });
 
 module.exports.apiServer = app;
 

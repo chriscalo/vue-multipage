@@ -527,6 +527,10 @@ Create `src/pages/404.vue` with the following content:
     <p>Oops! We couldn't find that resource</p>
   </div>
 </template>
+
+<style lang="scss">
+  @import "@/styles.scss";
+</style>
 ```
 
 Then update the `vue.config.js` file to match the following:

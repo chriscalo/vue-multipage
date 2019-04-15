@@ -1,8 +1,8 @@
 <template>
-  <main>
+  <div id="app">
     <Navigation/>
     /baz
-  </main>
+  </div>
 </template>
 
 <script>
@@ -16,5 +16,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/style.scss";
+  @import "@/styles.scss";
 </style>
