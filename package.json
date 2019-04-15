@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "dev:watch": "nodemon --watch vue.config.js --watch src/api.js --watch package.json --exec 'yarn run dev'",
+    "dev": "run-p dev:pages dev:server:watch",
+    "dev:pages": "nodemon --watch src/pages scripts/generate-entry-points.js",
+    "dev:server": "vue-cli-service serve",
+    "dev:server:watch": "nodemon --watch vue.config.js --watch src/entry --watch src/api.js --watch package.json --exec 'yarn run dev:server'",
     "build": "vue-cli-service build",
     "build:watch": "vue-cli-service build --watch",
     "serve": "http-server dist/ -c-1",
@@ -23,6 +25,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "ramda": "^0.26.1",
     "vue": "^2.6.10",
     "vuex": "^3.0.1"
   },
@@ -33,6 +36,7 @@
     "fast-glob": "^2.2.6",
     "node-sass": "^4.9.0",
     "nodemon": "^1.18.11",
+    "npm-run-all": "^4.1.5",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.21"
   }

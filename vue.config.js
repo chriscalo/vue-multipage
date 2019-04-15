@@ -1,13 +1,8 @@
 const { apiServer } = require('./src/api');
+const pagesConfig = require("./src/entry/pages.config.js");
 
 module.exports = {
-  pages: {
-    "index": 'src/pages/index.js',
-    "login/index": "src/pages/login.js",
-    "profile/index": "src/pages/profile/index.js",
-    "foo/index": 'src/pages/foo.js',
-    "bar/index": 'src/pages/bar/index.js',
-  },
+  pages: pagesConfig,
   devServer: {
     historyApiFallback: false,
     before: devServer => {
