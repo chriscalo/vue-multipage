@@ -617,7 +617,6 @@ const morgan = require("morgan");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { ensureLoggedIn } = require("connect-ensure-login");
 
 
 // Configure the local strategy for use by Passport.
@@ -679,7 +678,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Marking URLs that require login
-const loginRequired = ensureLoggedIn("/login");
+const loginRequired = (req, res, next) => {
+  if (!req.user) {
+    res.redirect(`/login?returnTo=${encodeURIComponent(req.url)}`)
+  } else {
+    next();
+  }
+};
 app.get("/foo", loginRequired);
 app.get("/bar", loginRequired);
 app.get("/baz", loginRequired);
@@ -731,6 +736,7 @@ app.get("/logout", (req, res) => {
 module.exports.apiServer = app;
 
 if (require.main === module) {
+  // FIXME: static serving for dist folder
   const PORT = process.env.PORT || 3000;
   const server = app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
@@ -742,7 +748,7 @@ if (require.main === module) {
 Next, let's add these dependencies:
 
 ``` sh
-yarn add body-parser cookie-parser morgan express-session passport passport-local connect-ensure-login
+yarn add body-parser cookie-parser morgan express-session passport passport-local
 ```
 
 Then, let's compose this API server with the devServer by updating
@@ -774,7 +780,7 @@ We added a login handler, but we don't have a login page yet. Let's create
 
 ``` html
 <template>
-  <main>
+  <div id="app">
     <Navigation/>
     <form
       @submit.prevent="submit"
@@ -794,7 +800,7 @@ We added a login handler, but we don't have a login page yet. Let's create
       </div>
       <button type="submit">Log in</button>
     </form>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -820,7 +826,8 @@ We added a login handler, but we don't have a login page yet. Let's create
           })
           .then(response => response.data)
           .then(data => {
-            window.location = data.returnTo || "/";
+            const urlParams = new URLSearchParams(window.location.search);
+            window.location = urlParams.get("returnTo") || "/";
           })
           .then(console.log)
           .catch(error => {
@@ -832,8 +839,9 @@ We added a login handler, but we don't have a login page yet. Let's create
 </script>
 
 <style lang="scss">
-  @import "@/style.scss";
+  @import "@/styles.scss";
 </style>
+
 ```
 
 We just need to install the axios dependency before restarting the dev server to
@@ -841,6 +849,61 @@ try things out.
 
 ``` sh
 yarn add axios
+```
+
+Finally, let's give users a way of logging out. Update
+`src/components/Navigation.vue` to the following:
+
+``` html
+<template>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/foo">Foo</a></li>
+      <li><a href="/bar">Bar</a></li>
+      <li v-if="signedIn"><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+</template>
+
+<script>
+  import axios from "axios";
+  
+  const signedInPromise =
+    axios
+      .get("/whoami")
+      .then(response => response.data)
+      .then(data => {
+        try {
+          return Boolean(data.user.username);
+        } catch (error) {
+          return false;
+        }
+      });
+  
+  export default {
+    data: () => ({
+      signedIn: false,
+    }),
+    mounted() {
+      signedInPromise.then(signedIn => this.signedIn = signedIn);
+    },
+  };
+</script>
+
+<style scoped>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  li:not(:last-child) {
+    margin-right: 16px;
+  }
+</style>
 ```
 
 [pages-config]: https://cli.vuejs.org/config/#pages
