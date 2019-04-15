@@ -7,12 +7,27 @@
       <li><a href="/baz">Baz</a></li>
       <li><a href="/login">Login</a></li>
       <li><a href="/profile">Profile</a></li>
-      <li><a href="/logout">Logout</a></li>
+      <li><a href="/logout" data-no-prefetch>Logout</a></li>
     </ul>
   </nav>
 </template>
 
+<script>
+  import Prefetch from "prefetch";
+  
+  export default {
+    mounted() {
+      Prefetch.init({ containers: ["nav"]});
+    },
+  };
+</script>
+
 <style lang="scss" scoped>
+  nav {
+    padding: 8px;
+    border: solid 2px black;
+  }
+  
   ul {
     list-style: none;
     margin: 0;

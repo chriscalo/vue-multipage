@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "run-p dev:pages dev:server:watch",
-    "dev:pages": "nodemon --watch src/pages scripts/generate-entry-points.js",
+    "dev:pages": "nodemon --watch src/pages --watch scripts/generate-entry-points.js scripts/generate-entry-points.js",
     "dev:server": "vue-cli-service serve",
     "dev:server:watch": "nodemon --watch vue.config.js --watch src/entry --watch src/api.js --watch package.json --exec 'yarn run dev:server'",
     "build": "vue-cli-service build",
@@ -25,6 +25,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "prefetch": "^0.2.1",
     "ramda": "^0.26.1",
     "vue": "^2.6.10",
     "vuex": "^3.0.1"

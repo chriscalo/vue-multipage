@@ -4,8 +4,6 @@
     Profile
     <br/>
     username = {{user.username}}
-    <br/>
-    <a href="/logout">Log out</a>
   </main>
 </template>
 

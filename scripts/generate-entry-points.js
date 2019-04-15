@@ -7,6 +7,8 @@ const { stripIndent } = require("common-tags");
 const pathGlob = processRelativePath('../src/pages/**/*.vue');
 const vuePagesPromise = glob(pathGlob);
 
+console.log(`Generating entry points`);
+
 // Step 1: compute specifications for work to be done
 const pagesConfigPromise = vuePagesPromise.then(pages => {
   return pages.map(page => {
@@ -34,19 +36,18 @@ const pagesConfigPromise = vuePagesPromise.then(pages => {
 
 // Step 2: clear entry folder
 const entryFolderPath = processRelativePath("../src/entry");
-console.log(entryFolderPath);
-// fse.removeSync(entryFolderPath);
+fse.removeSync(entryFolderPath);
+console.log(`Cleared ${entryFolderPath}`);
 
-// Step 2: create a corresponding entry point file for each page
+// Step 3: create a corresponding entry point file for each page
 pagesConfigPromise.then(config => {
   config.forEach(page => {
-    fse.outputFile(page.entryFilePath, page.entryFileContent);
+    fse.outputFileSync(page.entryFilePath, page.entryFileContent);
+    console.log(`Created ${page.entryFilePath}`);
   });
 });
 
-
-
-// Step 3: create a pages.config.js
+// Step 4: create a pages.config.js
 // module.exports = {
 //   "index": 'src/pages/index.js',
 //   "login/index": "src/pages/login.js",
@@ -66,7 +67,7 @@ pagesConfigPromise
   .then(R.mergeAll)
   .then(pageConfigContent)
   .then(content => fse.outputFileSync(pagesConfigPath, content))
-  .then(() => console.log(`Pages config file written: ${pagesConfigPath}`));
+  .then(() => console.log(`Created ${pagesConfigPath}`));
 
 
 function pageConfigContent(config) {

@@ -5361,6 +5361,10 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.5:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+prefetch@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/prefetch/-/prefetch-0.2.1.tgz#46283e6e566b871dc9ece0f6b8eefa17331df475"
+
 prepend-http@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
