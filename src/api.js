@@ -10,7 +10,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { ensureLoggedIn } = require('connect-ensure-login');
 
-const authRequired = ensureLoggedIn("/login");
+const loginRequired = ensureLoggedIn("/login");
 
 // Configure the local strategy for use by Passport.
 //
@@ -70,9 +70,9 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/foo", authRequired);
-app.get("/bar", authRequired);
-app.get("/profile", authRequired);
+app.get("/foo", loginRequired);
+app.get("/bar", loginRequired);
+app.get("/profile", loginRequired);
 
 app.route('/login')
   .post((req, res, next) => {
@@ -82,29 +82,35 @@ app.route('/login')
       if (err) {
         return next(err);
       }
+      
       if (!user) {
-        // TODO: display an error message
-        return res.redirect("/login");
+        return res.status(403).json({
+          error: info.message,
+        });
       }
+      
       req.login(user, err => {
         if (err) {
           return next(err);
         } else {
-          return res.redirect(req.session.returnTo || '/profile');
+          return res.json({
+            user: user,
+            redirectTo: req.session.redirectTo,
+          });
         }
       });
     })(req, res, next);
   });
 
-app.route("/whoami")
-  .get(
-    authRequired,
-    (req, res) => {
-      res.json({
-        user: req.user,
-      });
-    },
-  );
+app.get(
+  "/whoami",
+  loginRequired,
+  (req, res) => {
+    res.json({
+      user: req.user,
+    });
+  },
+);
 
 app.route('/logout')
   .get((req, res) => {
